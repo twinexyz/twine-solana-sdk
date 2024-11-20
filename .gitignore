@@ -1,0 +1,11 @@
+# Cargo build
+**/target
+# Lockfile from libs
+**/Cargo.lock
+
+# Profile-guided optimization
+/tmp
+pgo-data.profdata
+
+# MacOS nuisances
+.DS_Store
