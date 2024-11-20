@@ -7,3 +7,8 @@ pub mod instruction;
 pub mod lamports;
 pub mod pubkey;
 pub mod sanitize;
+
+pub use account::account_hasher::{AccountHash, AccountsHasher, MERKLE_FANOUT};
+pub use account::{accounts_db, Account};
+pub use hash::{Hash, Hasher};
+pub use pubkey::Pubkey;
