@@ -3,17 +3,17 @@
 //! [SHA-256]: https://en.wikipedia.org/wiki/SHA-2
 //! [`Hash`]: struct@Hash
 
-pub mod sanitize;
+use std::convert::TryFrom;
+use std::str::FromStr;
+use std::{fmt, mem};
 
-use {
-    borsh::{BorshDeserialize, BorshSerialize},
-    bytemuck::{Pod, Zeroable},
-    sanitize::Sanitize,
-    serde::{Deserialize, Serialize},
-    sha2::{Digest, Sha256},
-    std::{convert::TryFrom, fmt, mem, str::FromStr},
-    thiserror::Error,
-};
+use borsh::{BorshDeserialize, BorshSerialize};
+use bytemuck::{Pod, Zeroable};
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
+use thiserror::Error;
+
+use crate::sanitize::Sanitize;
 
 /// Size of a hash in bytes.
 pub const HASH_BYTES: usize = 32;
@@ -156,31 +156,6 @@ pub fn hashv(vals: &[&[u8]]) -> Hash {
         hasher.result()
     }
 }
-
-// /// Return a Sha256 hash for the given data.
-// pub fn hashv(vals: &[&[u8]]) -> Hash {
-//     // Perform the calculation inline, calling this from within a program is
-//     // not supported
-//     #[cfg(not(target_os = "solana"))]
-//     {
-//         let mut hasher = Hasher::default();
-//         hasher.hashv(vals);
-//         hasher.result()
-//     }
-//     // Call via a system call to perform the calculation
-//     #[cfg(target_os = "solana")]
-//     {
-//         let mut hash_result = [0; HASH_BYTES];
-//         unsafe {
-//             crate::syscalls::sol_sha256(
-//                 vals as *const _ as *const u8,
-//                 vals.len() as u64,
-//                 &mut hash_result as *mut _ as *mut u8,
-//             );
-//         }
-//         Hash::new_from_array(hash_result)
-//     }
-// }
 
 /// Return a Sha256 hash for the given data.
 pub fn hash(val: &[u8]) -> Hash {
