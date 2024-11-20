@@ -18,19 +18,6 @@ impl AccountsHasher {
         Self::compute_merkle_root_loop(hashes, fanout, |t| &t.1)
     }
 
-    // this function avoids an infinite recursion compiler error
-    pub fn compute_merkle_root_recurse(hashes: Vec<Hash>, fanout: usize) -> Hash {
-        Self::compute_merkle_root_loop(hashes, fanout, |t| t)
-    }
-
-    pub fn div_ceil(x: usize, y: usize) -> usize {
-        let mut result = x / y;
-        if x % y != 0 {
-            result += 1;
-        }
-        result
-    }
-
     // For the first iteration, there could be more items in the tuple than just hash and lamports.
     // Using extractor allows us to avoid an unnecessary array copy on the first iteration.
     pub fn compute_merkle_root_loop<T, F>(hashes: Vec<T>, fanout: usize, extractor: F) -> Hash
@@ -69,6 +56,19 @@ impl AccountsHasher {
         } else {
             Self::compute_merkle_root_recurse(result, fanout)
         }
+    }
+
+    // this function avoids an infinite recursion compiler error
+    pub fn compute_merkle_root_recurse(hashes: Vec<Hash>, fanout: usize) -> Hash {
+        Self::compute_merkle_root_loop(hashes, fanout, |t| t)
+    }
+
+    pub fn div_ceil(x: usize, y: usize) -> usize {
+        let mut result = x / y;
+        if x % y != 0 {
+            result += 1;
+        }
+        result
     }
 
     pub fn accumulate_account_hashes(mut hashes: Vec<(Pubkey, AccountHash)>) -> Hash {
