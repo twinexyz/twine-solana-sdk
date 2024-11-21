@@ -1,5 +1,5 @@
 pub mod account;
-pub mod atomic_u64;
+pub(crate) mod atomic_u64;
 pub mod clock;
 pub mod decode_error;
 pub mod hash;
